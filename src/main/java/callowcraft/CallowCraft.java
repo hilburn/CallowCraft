@@ -20,7 +20,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
  * CallowCraft Mod
  *
  * @author Charlie Paterson
- * @license GNU General Public License v3
+ * @license BDaJ non-commercial care-free license. (https://github.com/hilburn/CallowCraft/blob/master/LICENSE.md)
  **/
 @Mod(modid = "CallowCraft", name = "CallowCraft", version = "1.0.0")
 public class CallowCraft {
