@@ -1,0 +1,43 @@
+## General housekeeping
+*.bat
+*.class
+*.iml
+*.ipr
+*.iws
+*.json
+*.log
+*.py
+*.sh
+*.txt
+*.xml
+.cache
+lib/
+natives/
+
+## Because Macs
+.DS_Store
+._*
+
+## Gradle
+.gradle/
+build/
+gradle/
+gradlew
+out/
+output/
+run/
+
+## eclipse
+.classpath
+.metadata/
+.project
+.settings/
+bin/
+eclipse/
+
+## Intellij IDEA
+.idea/
+
+## netbeans
+nbbuild/
+nbproject/
