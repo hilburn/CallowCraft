@@ -24,8 +24,9 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
  **/
 @Mod(modid = "CallowCraft", name = "CallowCraft", version = "1.0.0")
 public class CallowCraft {
-    public static double xpMultiplier = 1.0D;
+    public static double xpModifier = 1.0D;
     public static int radius = 1;
+    public static int maxXPValue = 2048;
 
     @Instance("CallowCraft")
     public static CallowCraft instance = new CallowCraft();
@@ -34,36 +35,35 @@ public class CallowCraft {
     public void preInit(FMLPreInitializationEvent event)
     {
         config(event.getSuggestedConfigurationFile());
-        MinecraftForge.EVENT_BUS.register(new xpHandler(xpMultiplier,radius));
+        MinecraftForge.EVENT_BUS.register(new xpHandler());
     }
 
     public static void config(File file)
     {
         Configuration config = new Configuration(file);
 
-        Property xp = config.get("General", "xpMultiplier", xpMultiplier);
+        Property xp = config.get("General", "xpModifier", xpModifier);
         xp.comment = "Set from 0 (disabled) to 1 (no change)";
-        xpMultiplier = Math.max(Math.min(xp.getDouble(), 1.0D), 0.0D);
+        xpModifier = Math.max(Math.min(xp.getDouble(), 1.0D), 0.0D);
 
         Property rad = config.get("General", "groupingRadius", radius);
         rad.comment = "Set to 0 to disable grouping, higher values increase radius";
         radius = rad.getInt();
 
+        Property max = config.get("General", "maxXPGrouping", maxXPValue);
+        max.comment = "The maximum amount of XP a single orb will hold before no longer grouping";
+        maxXPValue = max.getInt();
+
         config.save();
     }
 
-
     public class xpHandler {
         private boolean all;
-        private int radius;
-        private double xpMultiplier;
         private boolean noGroup;
 
-        public xpHandler(double xpMultiplier, int radius)
+        public xpHandler()
         {
-            this.all = xpMultiplier == 0.0D;
-            this.xpMultiplier = xpMultiplier;
-            this.radius = radius;
+            this.all = xpModifier == 0.0D;
             this.noGroup = radius == 0;
         }
 
@@ -72,7 +72,7 @@ public class CallowCraft {
         {
             if (!e.world.isRemote) {
                 if (e.entity instanceof EntityXPOrb) {
-                    if (this.all || e.world.rand.nextDouble() > xpMultiplier) {
+                    if (this.all || e.world.rand.nextDouble() > xpModifier) {
                         e.setCanceled(true);
                         return;
                     }
@@ -82,7 +82,7 @@ public class CallowCraft {
                     List<EntityXPOrb> nearbyOrbs = (List<EntityXPOrb>) e.world.getEntitiesWithinAABB(EntityXPOrb.class, axisAlignedBB);
                     if (nearbyOrbs.isEmpty()) return;
                     for (EntityXPOrb nearbyOrb : nearbyOrbs) {
-                        if (nearbyOrb.isDead) continue;
+                        if (nearbyOrb.isDead || nearbyOrb.xpValue+orb.xpValue>maxXPValue) continue;
                         orb.xpValue += nearbyOrb.getXpValue();
                         e.world.removeEntity(nearbyOrb);
                     }
@@ -91,6 +91,4 @@ public class CallowCraft {
             }
         }
     }
-
-
 }
