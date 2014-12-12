@@ -3,7 +3,7 @@
     "modid": "CallowCraft",
     "name": "CallowCraft",
     "description": "Adds config options to reduce XP drops",
-    "version": "1.0.0",
+    "version": "0.9.5",
     "mcversion": "1.7.10",
     "url": "",
     "updateUrl": "",
